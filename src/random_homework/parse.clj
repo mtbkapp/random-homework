@@ -33,6 +33,7 @@
   [s]
   (nil? (re-find #"\||,|\s" s)))
 
+
 (spec/def ::str-field (spec/and string? no-delim-str? not-empty))
 (spec/def :person/first-name ::str-field)
 (spec/def :person/last-name ::str-field)

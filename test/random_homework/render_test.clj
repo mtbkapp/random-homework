@@ -33,4 +33,4 @@
     (is (= header "Last Name                First Name               Gender         Favorite Color      Date of Birth"))
     (is (empty? blank))
     (is (= r0 (render/render-record test-rec)))
-    (is (= r0 (render/render-record test-rec)))))
+    (is (= r1 (render/render-record test-rec)))))

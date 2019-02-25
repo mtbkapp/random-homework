@@ -1,7 +1,8 @@
 (ns random-homework.core
   (:require [clojure.java.io :as io]
             [clojure.spec.alpha :as spec]
-            [random-homework.parse :as parse])
+            [random-homework.parse :as parse]
+            [random-homework.process :as process])
   (:import [java.io File])
   (:gen-class))
 
@@ -13,7 +14,7 @@
          (.isFile file))))
 
 
-(def sort-by-fields #{"last-name" "birth-date" "gender"})
+(def sort-by-fields #{"last-name" "date-of-birth" "gender"})
 
 
 (spec/def ::cli-args
@@ -43,7 +44,8 @@
 
 (def usage "Usage: lein run <file-path> --delim <delim> --sort-by <sort-by>
            delim:   comma | space | pipe
-           sort-by: last-name | birth-date | gender")
+           sort-by: last-name | date-of-birth | gender")
+
 
 (defn -main
   [& args]

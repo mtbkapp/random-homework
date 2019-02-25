@@ -24,7 +24,7 @@
   (testing "sort-by arg"
     (is (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "last-name"]))
     (is (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "gender"]))
-    (is (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "birth-date"]))
+    (is (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "date-of-birth"]))
     (is (not (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "bike"])))))
 
 
@@ -47,9 +47,8 @@
   (testing "sort-by arg"
     (let [{last-name :op/sort-by} (core/parse-args [valid-path "--delim" "comma" "--sort-by" "last-name"])
           {gender :op/sort-by} (core/parse-args [valid-path "--delim" "comma" "--sort-by" "gender"])
-          {birth-date :op/sort-by} (core/parse-args [valid-path "--delim" "comma" "--sort-by" "birth-date"])]
+          {date-of-birth :op/sort-by} (core/parse-args [valid-path "--delim" "comma" "--sort-by" "date-of-birth"])]
       (is (= last-name "last-name"))
       (is (= gender "gender"))
-      (is (= birth-date "birth-date")))))
-
+      (is (= date-of-birth "date-of-birth")))))
 
