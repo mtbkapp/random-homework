@@ -69,7 +69,7 @@
 
 
 (defn parse-file
-  [{:keys [op/file op/delim]}]
+  [file delim]
   (with-open [rdr (io/reader file)]
     (into [] 
           (map (partial parse-line delim))

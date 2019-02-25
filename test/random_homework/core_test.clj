@@ -1,9 +1,9 @@
 (ns random-homework.core-test
   (:require [clojure.java.io :as io]
             [clojure.spec.alpha :as spec]
-            [clojure.spec.test.alpha :as stest]
             [clojure.test :refer :all]
-            [random-homework.core :as core]))
+            [random-homework.core :as core]
+            [random-homework.parse :as parse]))
 
 
 (def valid-path "./test-files/pipe.csv")
@@ -28,8 +28,6 @@
     (is (not (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "bike"])))))
 
 
-(stest/instrument `core/parse-args)
-
 (deftest test-parse-args
   (testing "both args"
     (let [args [valid-path "--delim" "pipe" "--sort-by" "last-name"]
@@ -52,3 +50,16 @@
       (is (= gender "gender"))
       (is (= date-of-birth "date-of-birth")))))
 
+
+(deftest test-main
+  (doseq [[delim-name _] parse/delims]
+    (testing delim-name
+      (doseq [sort-by-option core/sort-by-fields]
+        (testing sort-by-option
+          (testing "doesn't explode"
+            (with-out-str
+              (core/-main (str "test-files/" delim-name ".csv")
+                          "--delim"
+                          delim-name
+                          "--sort-by"
+                          sort-by-option))))))))

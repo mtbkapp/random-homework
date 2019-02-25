@@ -70,4 +70,4 @@
                               (BufferedReader. 
                                 (StringReader. file-contents)))]
       (compare-seqs expected-records
-                    (parse/parse-file {:op/file "some-file" :op/delim delim})))))
+                    (parse/parse-file "some-file" delim)))))

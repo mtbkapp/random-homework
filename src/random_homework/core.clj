@@ -2,7 +2,8 @@
   (:require [clojure.java.io :as io]
             [clojure.spec.alpha :as spec]
             [random-homework.parse :as parse]
-            [random-homework.process :as process])
+            [random-homework.process :as process]
+            [random-homework.render :as render])
   (:import [java.io File])
   (:gen-class))
 
@@ -37,10 +38,6 @@
 (spec/def :op/delim (into #{} (vals parse/delims)))
 (spec/def :op/sort-by sort-by-fields)
 
-(spec/fdef parse-args
-           :args (spec/cat :args (spec/spec ::cli-args))
-           :ret (spec/keys :req [:op/file :op/delim :op/sort-by]))
-
 
 (def usage "Usage: lein run <file-path> --delim <delim> --sort-by <sort-by>
            delim:   comma | space | pipe
@@ -50,5 +47,10 @@
 (defn -main
   [& args]
   (if (spec/valid? ::cli-args args)
-    #_(clojure.pprint/pprint (parse/parse (parse-args args)))
-    (println usage)))
+    (let [{:keys [op/file op/delim op/sort-by]} (parse-args args)]
+      (-> (parse/parse-file file delim)
+          (process/sort-records sort-by)
+          (render/render-records)))
+    (do (println usage)
+        (spec/explain ::cli-args args))))
+
