@@ -22,7 +22,7 @@
 
 
 (deftest test-render-record
-  (is (= "Kapp                     Jason                    M              green               12/12/1912   "
+  (is (= "Kapp                      Jason                     M               green                12/12/1912   "
          (render/render-record test-rec))))
 
 
@@ -30,7 +30,7 @@
   (let [rendered (with-out-str (render/render-records [test-rec test-rec]))
         [header blank r0 r1 :as lines] (string/split-lines rendered)]
     (is (= 4 (count lines)))
-    (is (= header "Last Name                First Name               Gender         Favorite Color      Date of Birth"))
+    (is (= header "Last Name                 First Name                Gender          Favorite Color       Date of Birth"))
     (is (empty? blank))
     (is (= r0 (render/render-record test-rec)))
     (is (= r1 (render/render-record test-rec)))))

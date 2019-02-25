@@ -23,7 +23,7 @@
 
 (defn render-record*
   [{:keys [first-name last-name gender fav-color date-of-birth]}]
-  (string/join ""
+  (string/join " "
                [(render-field last-name 25)
                 (render-field first-name 25)
                 (render-field gender 15)
