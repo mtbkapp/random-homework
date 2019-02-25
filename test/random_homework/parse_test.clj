@@ -44,8 +44,8 @@
                 :date-of-birth (parse/parse-date date-of-birth)}
                (parse/parse-line
                  delim
-                 (string/join delim [first-name
-                                     last-name
+                 (string/join delim [last-name
+                                     first-name
                                      gender
                                      fav-color
                                      date-of-birth]))))))))

@@ -33,11 +33,11 @@
   [s]
   (nil? (re-find #"\||,|\s" s)))
 
-
-(spec/def :person/first-name (spec/and string? no-delim-str? not-empty))
-(spec/def :person/last-name (spec/and string? no-delim-str? not-empty))
+(spec/def ::str-field (spec/and string? no-delim-str? not-empty))
+(spec/def :person/first-name ::str-field)
+(spec/def :person/last-name ::str-field)
 (spec/def :person/gender #{"M" "F"})
-(spec/def :person/fav-color (spec/and string? no-delim-str? not-empty))
+(spec/def :person/fav-color ::str-field)
 (spec/def :person/date-of-birth
   (spec/with-gen
     (spec/conformer parse-date format-date)
@@ -48,8 +48,8 @@
 
 
 (spec/def :person/record
-  (spec/cat :first-name :person/first-name
-            :last-name :person/last-name
+  (spec/cat :last-name :person/last-name
+            :first-name :person/first-name
             :gender :person/gender
             :fav-color :person/fav-color
             :date-of-birth :person/date-of-birth))
