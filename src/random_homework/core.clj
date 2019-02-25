@@ -1,6 +1,7 @@
 (ns random-homework.core
   (:require [clojure.java.io :as io]
-            [clojure.spec.alpha :as spec])
+            [clojure.spec.alpha :as spec]
+            [random-homework.parse :as parse])
   (:import [java.io File])
   (:gen-class))
 
@@ -12,18 +13,13 @@
          (.isFile file))))
 
 
-(def delims
-  {"space" " "
-   "comma" ","
-   "pipe" "|"})
-
 (def sort-by-fields #{"last-name" "birth-date" "gender"})
 
 
 (spec/def ::cli-args
   (spec/cat :file (spec/and string? valid-file-path?)
             :delim (spec/cat :flag #{"--delim"}
-                             :delim (into #{} (keys delims)))
+                             :delim (into #{} (keys parse/delims)))
             :sort-by (spec/cat :flag #{"--sort-by"}
                                :field sort-by-fields)))
 
@@ -32,12 +28,12 @@
   [args]
   (let [{file :file {delim :delim} :delim {sortby :field} :sort-by} (spec/conform ::cli-args args)]
     {:op/file (io/file file)
-     :op/delim (get delims delim)
+     :op/delim (get parse/delims delim)
      :op/sort-by sortby}))
 
 
 (spec/def :op/file #(instance? File %))
-(spec/def :op/delim (into #{} (vals delims)))
+(spec/def :op/delim (into #{} (vals parse/delims)))
 (spec/def :op/sort-by sort-by-fields)
 
 (spec/fdef parse-args
@@ -52,5 +48,5 @@
 (defn -main
   [& args]
   (if (spec/valid? ::cli-args args)
-    ()
+    #_(clojure.pprint/pprint (parse/parse (parse-args args)))
     (println usage)))
