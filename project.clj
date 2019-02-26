@@ -5,8 +5,9 @@
                  [clojure.java-time "0.3.2"]
 
                  ; web service deps
-                 [com.stuartsierra/component "0.4.0"]
-                 [compojure "1.6.1"]]
+                 [cheshire "5.8.1"]
+                 [compojure "1.6.1"]
+                 [ring/ring-jetty-adapter "1.7.1"]]
 
   :main ^:skip-aot random-homework.core
   :target-path "target/%s"

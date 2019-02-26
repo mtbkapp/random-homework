@@ -1,15 +1,7 @@
 (ns random-homework.db-test
   (:require [clojure.test :refer :all]
-            [com.stuartsierra.component :as c] 
             [random-homework.db :as db]
             [random-homework.test-recs :as tr]))
-
-
-(deftest test-lifecycle
-  (let [db (db/new-db)
-        started (c/start db)
-        stopped (c/stop db)]
-    (is (= db started stopped))))
 
 
 (deftest test-crud-ops
