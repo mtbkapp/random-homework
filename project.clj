@@ -7,4 +7,6 @@
   :target-path "target/%s"
 
   :profiles {:uberjar {:aot :all}
-             :dev {:dependencies [[org.clojure/test.check "0.9.0"]]}})
+             :dev {:dependencies [[org.clojure/test.check "0.9.0"]]}}
+  :plugins [[lein-cloverage "1.0.13"]]
+  )

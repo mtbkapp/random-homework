@@ -1,32 +1,34 @@
 # random-homework
 
-FIXME: description
+Some random homework assignment
 
-## Installation
-
-Download from http://example.com/FIXME.
 
 ## Usage
 
-FIXME: explanation
+```
+$ lein run <file-path> --delim <delim> --sort-by <sort-by>
 
-    $ java -jar random-homework-0.1.0-standalone.jar [args]
+```
 
-## Options
+### `file-path` argument
+A valid path to a CSV file delimited by comma, space, or pipe characters. See
+homework spec for details.
 
-FIXME: listing of options this app accepts.
+### `delim` flag
+*  Options: `comma`, `space`, or `pipe`
+*  Specifies the delimiter that the input file uses. 
 
-## Examples
+### `sort-by` flag
 
-...
+* `gender` sorts by the gender field (females before males), then by the 
+  last name field in ascending order.
+* `date-of-birth` sorts by the date of birth field in ascending order.
+* `last-name` sorts by the last name field in decending order.
 
-### Bugs
 
-...
+## Test Coverage Report
 
-### Any Other Sections
-### That You Think
-### Might be Useful
+`$ lein cloverage`
 
 ## License
 
