@@ -17,6 +17,8 @@
 
 
 (defn parse-date
+  "Parses the string representation in the format specified by the var 
+  date-format into a java.time.LocalDate, clojure.spec.alpha/invalid otherwise."
   [date-str]
   (try
     (jt/local-date date-format date-str)
@@ -25,11 +27,15 @@
 
 
 (defn format-date 
+  "Given a java.time.LocalDate instance formats it into a string with the format
+  given by the date-format var."
   [date]
   (jt/format date-format date))
 
 
 (defn no-delim-str?
+  "Predicate the indicates if the given string does not contain the file 
+  delimiters."
   [s]
   (nil? (re-find #"\||,|\s" s)))
 
@@ -57,11 +63,13 @@
 
 
 (defn delim-pattern
+  "Given a delimiter returns a regex pattern that matches that delimiter."
   [delim]
   (re-pattern (if (= delim "|") "\\|" delim)))
 
 
 (defn parse-line
+  "Parses a line of text into data and conforms it with the :person/record spec."
   [delim line]
   (->> (string/split line (delim-pattern delim))
        (map string/trim)
@@ -69,8 +77,11 @@
 
 
 (defn parse-file
+  "Parses the given file into a vector of data which each item in the vector 
+  conforms to the :person/record spec."
   [file delim]
   (with-open [rdr (io/reader file)]
     (into [] 
           (map (partial parse-line delim))
           (line-seq rdr))))
+

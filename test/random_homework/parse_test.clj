@@ -50,6 +50,7 @@
                                      fav-color
                                      date-of-birth]))))))))
 
+
 (defn compare-seqs
   [expected actual]
   (let [ev (vec expected)

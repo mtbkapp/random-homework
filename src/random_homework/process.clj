@@ -3,6 +3,8 @@
 
 
 (defn by-gender
+  "A comparator to sort records by gender (females before males) then by last
+  name in ascending order."
   [{gender-a :gender lname-a :last-name} {gender-b :gender lname-b :last-name}]
   (let [gender-compare (compare gender-a gender-b)]
     (if (zero? gender-compare)
@@ -15,12 +17,14 @@
 
 
 (defn by-date-of-birth
+  "A comparator to sort records by date of birth in ascending order."
   [rec-a rec-b]
   (compare (date-of-birth-milli rec-a)
            (date-of-birth-milli rec-b)))
 
 
 (defn by-last-name
+  "A comparator to sort records by last name in descending order."
   [rec-a rec-b]
   (compare (:last-name rec-b)
            (:last-name rec-a)))
@@ -33,5 +37,7 @@
 
 
 (defn sort-records
+  "Given a sequence of records sorts them by the sort-by-option which is one
+  of the keys in the sort-by-comparator map."
   [recs sort-by-option]
   (sort-by identity (sort-by-comparator sort-by-option) recs))

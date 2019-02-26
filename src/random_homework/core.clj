@@ -9,6 +9,7 @@
 
 
 (defn valid-file-path?
+  "Predicate that determines if the given path references an existing file."
   [path]
   (let [file (io/file path)]
     (and (.exists file)
@@ -27,6 +28,8 @@
 
 
 (defn parse-args
+  "Given a sequence of CLI arguments to this program conforms them to the
+  ::cli-args spec."
   [args]
   (let [{file :file {delim :delim} :delim {sortby :field} :sort-by} (spec/conform ::cli-args args)]
     {:op/file (io/file file)
