@@ -49,7 +49,9 @@
 (defn render-records
   "Given a sequence of :person/record confomed values formats them and prints
   them to *out*"
-  [recs]
+  [title recs]
+  (println)
+  (println (str title ":"))
   (println (render-record* header-record))
   (println)
   (doseq [r recs]

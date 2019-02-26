@@ -1,65 +1,31 @@
 (ns random-homework.core-test
   (:require [clojure.java.io :as io]
-            [clojure.spec.alpha :as spec]
             [clojure.test :refer :all]
-            [random-homework.core :as core]
-            [random-homework.parse :as parse]))
+            [clojure.string :as string]
+            [random-homework.core :as core]))
 
 
-(def valid-path "./test-files/pipe.csv")
+(def invalid-path "./not-a-box-of-donuts.csv")
 
 
-(deftest test-cli-args-spec
-  (testing "No args"
-    (is (not (spec/valid? ::core/cli-args []))))
-  (testing "File arg"
-    (is (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "last-name"]))
-    (is (not (spec/valid? ::core/cli-args ["./not-a-file" "--delim" "space" "--sort-by" "last-name"]))))
-  (testing "delim arg"
-    (is (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "last-name"]))
-    (is (spec/valid? ::core/cli-args [valid-path "--delim" "comma" "--sort-by" "last-name"]))
-    (is (spec/valid? ::core/cli-args [valid-path "--delim" "pipe" "--sort-by" "last-name"]))
-    (is (not (spec/valid? ::core/cli-args [valid-path "--delim" "--sort-by" "last-name"])))
-    (is (not (spec/valid? ::core/cli-args [valid-path "--delim" "fries" "--sort-by" "last-name"]))))
-  (testing "sort-by arg"
-    (is (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "last-name"]))
-    (is (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "gender"]))
-    (is (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "date-of-birth"]))
-    (is (not (spec/valid? ::core/cli-args [valid-path "--delim" "space" "--sort-by" "bike"])))))
-
-
-(deftest test-parse-args
-  (testing "both args"
-    (let [args [valid-path "--delim" "pipe" "--sort-by" "last-name"]
-          {:keys [op/file op/delim op/sort-by]} (core/parse-args args)]
-      (is (= (io/file valid-path) file))
-      (is (= "|" delim))
-      (is (= "last-name" sort-by))))
-  (testing "delim arg"
-    (let [{comma :op/delim} (core/parse-args [valid-path "--delim" "comma" "--sort-by" "last-name"])
-          {pipe :op/delim} (core/parse-args [valid-path "--delim" "pipe" "--sort-by" "last-name"])
-          {space :op/delim} (core/parse-args [valid-path "--delim" "space" "--sort-by" "last-name"])]
-      (is (= comma ","))
-      (is (= pipe "|"))
-      (is (= space " "))))
-  (testing "sort-by arg"
-    (let [{last-name :op/sort-by} (core/parse-args [valid-path "--delim" "comma" "--sort-by" "last-name"])
-          {gender :op/sort-by} (core/parse-args [valid-path "--delim" "comma" "--sort-by" "gender"])
-          {date-of-birth :op/sort-by} (core/parse-args [valid-path "--delim" "comma" "--sort-by" "date-of-birth"])]
-      (is (= last-name "last-name"))
-      (is (= gender "gender"))
-      (is (= date-of-birth "date-of-birth")))))
+(deftest test-valid-file-path?
+  (testing "file doesn't exist"
+    (is (not (core/valid-file-path? invalid-path))))
+  (testing "directory"
+    (is (not (core/valid-file-path? "./src"))))
+  (testing "file"
+    (is (core/valid-file-path? "./test-files/comma.csv"))))
 
 
 (deftest test-main
-  (doseq [[delim-name _] parse/delims]
-    (testing delim-name
-      (doseq [sort-by-option core/sort-by-fields]
-        (testing sort-by-option
-          (testing "doesn't explode"
-            (with-out-str
-              (core/-main (str "test-files/" delim-name ".csv")
-                          "--delim"
-                          delim-name
-                          "--sort-by"
-                          sort-by-option))))))))
+  (testing "doesn't explode"
+    (let [comma-file (io/file "./test-files/comma.csv")
+          pipe-file (io/file "./test-files/pipe.csv")
+          space-file (io/file "./test-files/space.csv")
+          output (with-out-str
+                   (core/-main comma-file pipe-file space-file))]
+      (is (not (string/includes? output core/usage)))))
+  (testing "bad args"
+    (let [output (with-out-str
+                   (core/-main invalid-path invalid-path))]
+      (is (string/includes? output core/usage)))))

@@ -6,25 +6,15 @@ Some random homework assignment
 ## Usage
 
 ```
-$ lein run <file-path> --delim <delim> --sort-by <sort-by>
+$ lein run <comma-file> <pipe-file> <space-file>
 
 ```
 
-### `file-path` argument
-A valid path to a CSV file delimited by comma, space, or pipe characters. See
-homework spec for details.
-
-### `delim` flag
-*  Options: `comma`, `space`, or `pipe`
-*  Specifies the delimiter that the input file uses. 
-
-### `sort-by` flag
-
-* `gender` sorts by the gender field (females before males), then by the 
-  last name field in ascending order.
-* `date-of-birth` sorts by the date of birth field in ascending order.
-* `last-name` sorts by the last name field in decending order.
-
+## Output
+Prints the records in the given files sorted in three ways:
+1.  gender (females before males) then by last name in ascending order
+1.  date of birth in ascending order
+1.  last name in descending order.
 
 ## Test Coverage Report
 

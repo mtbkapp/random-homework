@@ -15,15 +15,23 @@
 
 (deftest test-sort-by-gender
   (is (= [rec-c rec-d rec-a rec-b]
-         (process/sort-records recs "gender"))))
+         (process/sort-records recs :sort-by/gender))))
 
 
 (deftest test-sort-by-date-of-birth-asc
   (is (= [rec-d rec-c rec-b rec-a]
-         (process/sort-records recs "date-of-birth"))))
+         (process/sort-records recs :sort-by/date-of-birth))))
 
 
 (deftest test-sort-by-last-name-desc
   (is (= [rec-d rec-c rec-b rec-a]
-         (process/sort-records recs "last-name"))))
+         (process/sort-records recs :sort-by/last-name))))
+
+
+(deftest test-combine-records
+  (is (= [rec-a rec-a rec-b rec-b rec-c rec-c rec-d rec-d]
+         (process/combine-records [rec-a rec-a]
+                                  [rec-b rec-b]
+                                  [rec-c rec-c]
+                                  [rec-d rec-d]))))
 

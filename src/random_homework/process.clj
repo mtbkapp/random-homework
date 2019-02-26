@@ -30,14 +30,21 @@
            (:last-name rec-a)))
 
 
-(def sort-by-comparator
-  {"last-name" by-last-name
-   "date-of-birth" by-date-of-birth
-   "gender" by-gender})
+(def sort-by-comparators
+  {:sort-by/last-name by-last-name
+   :sort-by/date-of-birth by-date-of-birth
+   :sort-by/gender by-gender})
 
 
 (defn sort-records
   "Given a sequence of records sorts them by the sort-by-option which is one
   of the keys in the sort-by-comparator map."
   [recs sort-by-option]
-  (sort-by identity (sort-by-comparator sort-by-option) recs))
+  (sort-by identity (sort-by-comparators sort-by-option) recs))
+
+
+(defn combine-records
+  "Given several sequences of records, combines then into a single vector."
+  [& record-sets]
+  (reduce into [] record-sets))
+

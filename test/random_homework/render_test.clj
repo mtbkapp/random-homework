@@ -27,10 +27,13 @@
 
 
 (deftest test-render-records
-  (let [rendered (with-out-str (render/render-records [test-rec test-rec]))
-        [header blank r0 r1 :as lines] (string/split-lines rendered)]
-    (is (= 4 (count lines)))
+  (let [title "Donuts"
+        rendered (with-out-str (render/render-records title [test-rec test-rec]))
+        [blank0 title-line header blank1 r0 r1 :as lines] (string/split-lines rendered)]
+    (is (= 6 (count lines)))
+    (is (empty? blank0))
+    (is (= (str title ":") title-line))
     (is (= header "Last Name                 First Name                Gender          Favorite Color       Date of Birth"))
-    (is (empty? blank))
+    (is (empty? blank1))
     (is (= r0 (render/render-record test-rec)))
     (is (= r1 (render/render-record test-rec)))))

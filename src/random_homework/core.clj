@@ -4,7 +4,6 @@
             [random-homework.parse :as parse]
             [random-homework.process :as process]
             [random-homework.render :as render])
-  (:import [java.io File])
   (:gen-class))
 
 
@@ -20,40 +19,30 @@
 
 
 (spec/def ::cli-args
-  (spec/cat :file (spec/and string? valid-file-path?)
-            :delim (spec/cat :flag #{"--delim"}
-                             :delim (into #{} (keys parse/delims)))
-            :sort-by (spec/cat :flag #{"--sort-by"}
-                               :field sort-by-fields)))
+  (spec/cat :comma-file valid-file-path?
+            :pipe-file valid-file-path?
+            :space-file valid-file-path?))
 
 
-(defn parse-args
-  "Given a sequence of CLI arguments to this program conforms them to the
-  ::cli-args spec."
-  [args]
-  (let [{file :file {delim :delim} :delim {sortby :field} :sort-by} (spec/conform ::cli-args args)]
-    {:op/file (io/file file)
-     :op/delim (get parse/delims delim)
-     :op/sort-by sortby}))
-
-
-(spec/def :op/file #(instance? File %))
-(spec/def :op/delim (into #{} (vals parse/delims)))
-(spec/def :op/sort-by sort-by-fields)
-
-
-(def usage "Usage: lein run <file-path> --delim <delim> --sort-by <sort-by>
-           delim:   comma | space | pipe
-           sort-by: last-name | date-of-birth | gender")
+(def usage "Usage: lein run <comma-file-path> <pipe-file-path> <space-file-path>")
 
 
 (defn -main
   [& args]
   (if (spec/valid? ::cli-args args)
-    (let [{:keys [op/file op/delim op/sort-by]} (parse-args args)]
-      (-> (parse/parse-file file delim)
-          (process/sort-records sort-by)
-          (render/render-records)))
+    (let [{:keys [comma-file pipe-file space-file]} (spec/conform ::cli-args args)
+          records (process/combine-records (parse/parse-file comma-file ",")
+                                           (parse/parse-file pipe-file "|")
+                                           (parse/parse-file space-file " "))]
+      (render/render-records 
+        "Data sorted by gender" 
+        (process/sort-records records :sort-by/gender))
+      (render/render-records 
+        "Data sorted by date of birth" 
+        (process/sort-records records :sort-by/date-of-birth))
+      (render/render-records
+        "Data sorted by last name."
+        (process/sort-records records :sort-by/last-name)))
     (do (println usage)
         (spec/explain ::cli-args args))))
 
