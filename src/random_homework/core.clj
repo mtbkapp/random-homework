@@ -15,9 +15,6 @@
          (.isFile file))))
 
 
-(def sort-by-fields #{"last-name" "date-of-birth" "gender"})
-
-
 (spec/def ::cli-args
   (spec/cat :comma-file valid-file-path?
             :pipe-file valid-file-path?

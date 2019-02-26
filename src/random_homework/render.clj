@@ -12,7 +12,6 @@
           (subs value 0 (min (count value) width))))
 
 
-
 (def header-record
   {:last-name "Last Name"
    :first-name "First Name"

@@ -1,5 +1,5 @@
 (ns random-homework.process
-  (:require [java-time :as jt]))
+  (:require [clojure.string :as string]))
 
 
 (defn by-gender
@@ -26,8 +26,8 @@
 (defn by-last-name
   "A comparator to sort records by last name in descending order."
   [rec-a rec-b]
-  (compare (:last-name rec-b)
-           (:last-name rec-a)))
+  (compare (string/lower-case (:last-name rec-b))
+           (string/lower-case (:last-name rec-a))))
 
 
 (def sort-by-comparators
