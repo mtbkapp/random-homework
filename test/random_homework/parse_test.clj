@@ -4,7 +4,8 @@
             [clojure.spec.gen.alpha :as gen]
             [clojure.string :as string]
             [clojure.test :refer :all]
-            [random-homework.parse :as parse])
+            [random-homework.parse :as parse]
+            [random-homework.test-recs :as tr])
   (:import [java.io BufferedReader StringReader]))
 
 
@@ -51,15 +52,16 @@
                                      date-of-birth]))))))))
 
 
-(defn compare-seqs
-  [expected actual]
-  (let [ev (vec expected)
-        av (vec actual)]
-    (is (= (count ev) (count av)) "Equals lengths")
-    (doseq [i (range (count ev))]
-      (is (= (nth ev i)
-             (nth av i))
-          (str "index = " i)))))
+(deftest test-try-parse-line
+  (testing "invalid lines"
+    (is (= ::spec/invalid (parse/try-parse-line "donuts donuts donuts donuts")))
+    (is (= ::spec/invalid (parse/try-parse-line "donuts donuts donuts donuts donuts"))))
+  (testing "comma"
+    (is (= tr/rec-a (parse/try-parse-line (parse/rec->line tr/rec-a ",")))))
+  (testing "pipe"
+    (is (= tr/rec-a (parse/try-parse-line (parse/rec->line tr/rec-a "|")))))
+  (testing "space"
+    (is (= tr/rec-a (parse/try-parse-line (parse/rec->line tr/rec-a " "))))))
 
 
 (deftest test-parse-file
@@ -70,5 +72,6 @@
     (with-redefs [io/reader (constantly 
                               (BufferedReader. 
                                 (StringReader. file-contents)))]
-      (compare-seqs expected-records
-                    (parse/parse-file "some-file" delim)))))
+      (tr/compare-recs expected-records
+                       (parse/parse-file "some-file" delim)))))
+

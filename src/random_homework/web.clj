@@ -7,7 +7,8 @@
             [ring.adapter.jetty :as jetty]
             [random-homework.db :as db]
             [random-homework.parse :as parse])
-  (:import [java.time LocalDate]))
+  (:import [java.io InputStream]
+           [java.time LocalDate]))
 
 
 (defn handle-get
@@ -16,11 +17,21 @@
   (db/sorted-records db sort-by-option))
 
 
+(defn handle-post
+  "Handle the POST request by saving the posted record to the database."
+  [{:keys [body db] :as request}]
+  (let [parsed (parse/try-parse-line body)]
+    (if (= ::spec/invalid parsed)
+      {:status 400}
+      (do (db/add-record db parsed)
+          {:status 200}))))
+
+
 (defroutes app-routes
   (GET "/records/gender" req (handle-get req :sort-by/gender))
   (GET "/records/birthdate" req (handle-get req :sort-by/date-of-birth))
   (GET "/records/name" req (handle-get req :sort-by/last-name))
-  ;(POST "/" req)
+  (POST "/" req (handle-post req))
   (route/not-found "¡No hay nada aquí!"))
 
 
@@ -47,11 +58,22 @@
     (handler (assoc request :db db))))
 
 
+(defn read-request-body
+  [handler]
+  (fn [{:keys [body] :as request}]
+    (handler
+      (if (and (contains? request :body) 
+               (instance? InputStream body))
+        (update request :body slurp)
+        request))))
+
+
 (defn app
   "Creates the main Ring handler function for the web application."
   [db]
   (-> app-routes
       (json-encode-middleware)
+      (read-request-body)
       (inject-db db)))
 
 

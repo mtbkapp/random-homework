@@ -5,10 +5,19 @@ Some random homework assignment
 
 ## Usage
 
-```
-$ lein run <comma-file> <pipe-file> <space-file>
+Command line version
 
 ```
+$ lein run <comma-file> <pipe-file> <space-file>
+```
+
+Web service
+```
+$ lein run -m random-homework.web --port <port> 
+```
+
+See spec for web API
+
 
 ## Output
 Prints the records in the given files sorted in three ways:

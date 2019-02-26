@@ -62,6 +62,17 @@
             :date-of-birth :person/date-of-birth))
 
 
+(defn rec->line
+  "Turns a record back into a line with the give delimiter"
+  [{:keys [first-name last-name gender fav-color date-of-birth]} delim]
+  (string/join delim
+               [last-name
+                first-name
+                gender
+                fav-color
+                (format-date date-of-birth)]))
+
+
 (defn delim-pattern
   "Given a delimiter returns a regex pattern that matches that delimiter."
   [delim]
@@ -74,6 +85,25 @@
   (->> (string/split line (delim-pattern delim))
        (map string/trim)
        (spec/conform :person/record)))
+
+
+(defn not-invalid
+  [conformed-value]
+  (if (not= ::spec/invalid conformed-value)
+    conformed-value))
+
+
+(defn try-parse-line
+  "Tries to parse the given line by guessing the delimeter. Returns the same
+  data shape as pase-line. If the delimeter can not be guessed returns
+  :clojure.spec.alpha/invalid"
+  [line]
+  (let [parsed (some (fn [delim]
+                       (not-invalid (parse-line delim line)))
+                     (vals delims))]
+    (if (some? parsed)
+      parsed
+      ::spec/invalid)))
 
 
 (defn parse-file

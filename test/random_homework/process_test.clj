@@ -21,9 +21,10 @@
 
 
 (deftest test-combine-records
-  (is (= [tr/rec-a tr/rec-a tr/rec-b tr/rec-b tr/rec-c tr/rec-c tr/rec-d tr/rec-d]
-         (process/combine-records [tr/rec-a tr/rec-a]
-                                  [tr/rec-b tr/rec-b]
-                                  [tr/rec-c tr/rec-c]
-                                  [tr/rec-d tr/rec-d]))))
+  (tr/compare-recs
+    [tr/rec-a tr/rec-a tr/rec-b tr/rec-b tr/rec-c tr/rec-c tr/rec-d tr/rec-d]
+    (process/combine-records [tr/rec-a tr/rec-a]
+                             [tr/rec-b tr/rec-b]
+                             [tr/rec-c tr/rec-c]
+                             [tr/rec-d tr/rec-d])))
 

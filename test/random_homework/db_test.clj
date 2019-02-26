@@ -10,6 +10,7 @@
                (db/add-record tr/rec-b)
                (db/add-record tr/rec-c)
                (db/add-record tr/rec-d))]
-    (is (= [tr/rec-c tr/rec-d tr/rec-a tr/rec-b]
-           (db/sorted-records db :sort-by/gender)))))
+    (tr/compare-recs 
+      [tr/rec-c tr/rec-d tr/rec-a tr/rec-b]
+      (db/sorted-records db :sort-by/gender))))
 
