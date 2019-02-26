@@ -25,16 +25,5 @@
 
 (defn -main
   []
-  (gen-files 1000))
-
-
-
-
-
-
-
-
-
-
-
+  (gen-files 50))
 
